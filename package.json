@@ -1,8 +1,8 @@
 {
-  "name": "my-module",
+  "name": "nuxt-ui-timepicker",
   "version": "1.0.0",
-  "description": "My new Nuxt module",
-  "repository": "your-org/my-module",
+  "description": "A Nuxt UI-based time picker component module.",
+  "repository": "paulbq/nuxt-ui-timepicker",
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -22,6 +22,8 @@
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "build": "nuxt-module-build",
+    "prepublishOnly": "pnpm build",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "test": "vitest run",
@@ -32,7 +34,8 @@
     "@iconify-json/lucide": "^1.2.34",
     "@iconify-json/simple-icons": "^1.2.30",
     "@nuxt/kit": "^3.16.2",
-    "culori": "^4.0.1"
+    "culori": "^4.0.1",
+    "defu": "^6.1.4"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.3.2",
@@ -50,5 +53,13 @@
     "typescript": "~5.8.2",
     "vitest": "^3.1.1",
     "vue-tsc": "^2.2.8"
+  },
+  "peerDependencies": {
+    "@iconify-json/lucide": "^1.2.34",
+    "@iconify-json/simple-icons": "^1.2.30",
+    "@nuxt/kit": "^3.16.2",
+    "@nuxt/ui": "3.0.2",
+    "culori": "^4.0.1",
+    "nuxt": "^3.16.2"
   }
 }

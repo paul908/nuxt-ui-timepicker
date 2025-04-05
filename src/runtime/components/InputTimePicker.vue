@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ClockDial from "~/components/ui/ClockDial.vue";
-import { useAttrs } from 'vue'
+import { ref, computed, watch, onMounted, toRefs, useAttrs } from 'vue'
+import ClockDial from "./ClockDial.vue";
 
 
 // const model = defineModel<string>('12:00')

@@ -10,6 +10,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watch, onMounted, onBeforeUnmount, toRefs, useAttrs } from 'vue'
 
 import {formatHex} from 'culori';
 
@@ -47,7 +48,7 @@ const index = ref<number>(0)
 const lastHour = ref<number>(props.hour)
 const lastMinute = ref<number>(props.minute)
 setIndex();
-draw();
+// draw();
 
 let primary = formatHex(primaryColor) ?? "#808080";
 let secondary = formatHex(secondaryColor) ?? "#808080";
@@ -61,11 +62,14 @@ onMounted(() => {
   // See https://www.chromestatus.com/feature/5745543795965952
   const canvas = canvasRef.value
   if (canvas) {
+
+    draw();
+
     canvas.addEventListener('touchstart', onTouchStart, { passive: false })
     canvas.addEventListener('touchmove', onTouchMove, { passive: false })
     canvas.addEventListener('touchend', onTouchEnd, { passive: false })
   }
-  draw();
+
 })
 
 onBeforeUnmount(() => {
@@ -147,6 +151,12 @@ function draw() {
   const ctx = el.getContext('2d')
   if (!ctx) return
 
+  const dpr = window.devicePixelRatio || 1
+  el.width = 256 * dpr
+  el.height = 256 * dpr
+  if (ctx) {
+    ctx.scale(dpr, dpr)
+  }
   const width = el.width = el.offsetWidth
   const height = el.height = el.offsetHeight
   const x_center = width / 2;
@@ -156,6 +166,12 @@ function draw() {
   const dotRadius = DOT_RADIUS_FACTOR * width;
 
   ctx.clearRect(0, 0, width, height)
+
+  // Draw circular background inside canvas
+  ctx.beginPath()
+  ctx.arc(128, 128, 128, 0, 2 * Math.PI)
+  ctx.fillStyle = neutral // Tailwind neutral-200
+  ctx.fill()
 
   const steps = props.mode === 'hour'
       ? (props.is24h ? 24 : 12)

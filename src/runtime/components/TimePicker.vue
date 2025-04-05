@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import ClockDial from "~/components/ui/ClockDial.vue";
+import {ref, computed, watch, onMounted, toRefs, useAttrs} from 'vue'
+import ClockDial from "./ClockDial.vue";
 
 const props = defineProps<{
   is24h: boolean
@@ -95,8 +96,8 @@ function confirm() {
 
 function activeTabClass(tab: 'hour' | 'minute') {
   return tab === selecting.value
-      ? 'text-primary font-bold text-5xl'
-      : 'text-neutral-100 text-5xl'
+    ? 'text-primary font-bold text-5xl'
+    : 'text-neutral-100 text-5xl'
 }
 
 </script>
@@ -140,13 +141,13 @@ function activeTabClass(tab: 'hour' | 'minute') {
 
       <!-- Clock Dial -->
       <ClockDial
-          :mode="selecting"
-          :hour="localTime.hour"
-          :minute="localTime.minute"
-          :is24h="format24h"
-          :pm="pm"
-          @update="onClockSelect"
-          @updatePm="onUpdateAmPm"
+        :mode="selecting"
+        :hour="localTime.hour"
+        :minute="localTime.minute"
+        :is24h="format24h"
+        :pm="pm"
+        @update="onClockSelect"
+        @updatePm="onUpdateAmPm"
       />
     </template>
   </UPopover>
