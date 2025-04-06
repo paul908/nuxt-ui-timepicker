@@ -23,6 +23,35 @@ const format24h = ref(props.is24h ?? true)
 const pm = ref(false)
 pm.value = localTime.value.hour >= 12
 
+onMounted(() => {
+  const root = getComputedStyle(document.documentElement);
+  var r = document.querySelector(':root');
+  const primaryColor = root.getPropertyValue('--ui-color-primary-500').trim();
+  const secondaryColor = root.getPropertyValue('--ui-color-secondary-500').trim();
+  const neutralColor = root.getPropertyValue('--ui-color-neutral-200').trim();
+  const textColor = root.getPropertyValue('--ui-color-neutral-700').trim();
+  console.log("primaryColor: ", primaryColor);
+  // root.setProperty('--prim', primaryColor);
+
+  // Loop through and apply the background color
+  let elements = document.querySelectorAll('.bg-prim')
+
+  elements.forEach(el => {
+    if (el instanceof HTMLElement) {
+      el.style.backgroundColor = primaryColor
+    }
+
+  })
+  elements = document.querySelectorAll('.text-primary')
+
+  elements.forEach(el => {
+    if (el instanceof HTMLElement) {
+      el.style.color = primaryColor
+    }
+
+  })
+})
+
 const pmLabel = computed(() => {
   return pm.value ? 'PM' : 'AM';
 })
@@ -96,18 +125,19 @@ function confirm() {
 
 function activeTabClass(tab: 'hour' | 'minute') {
   return tab === selecting.value
-    ? 'text-primary font-bold text-5xl'
-    : 'text-neutral-100 text-5xl'
+    ? 'text-neutral-100 text-5xl bg-prim font-bold'
+    : 'text-neutral-100 text-5xl bg-prim '
 }
 
 </script>
 
 <template>
+<!--  <div class="bg-prim h-32 w-32">Hello</div>-->
   <UPopover>
     <UButton icon="i-lucide-clock-3" size="md" color="primary" variant="solid"/>
     <template #content class="w-125 flex flex-col items-center justify-center">
       <!-- Time Display 24h -->
-      <div v-if="format24h" class="flex flex-row items-center justify-center gap-4 bg-primary-500 text-white p-2">
+      <div v-if="format24h" class="bg-prim flex flex-row items-center justify-center gap-4 bg-primary-500 text-neutral-100 p-2">
         <button @click="selecting = 'hour'" :class="activeTabClass('hour')">
           {{ localTime.hour }}
         </button>
@@ -118,15 +148,15 @@ function activeTabClass(tab: 'hour' | 'minute') {
       </div>
       <!-- Time Display AM/PM -->
       <div v-if="!format24h"
-           class="flex flex-row items-center justify-center align-center gap-4 bg-primary-500 text-white p-2">
+           class="bg-prim flex flex-row items-center justify-center align-center gap-4 text-neutral-100 p-2">
         <button @click="selecting = 'hour'" :class="activeTabClass('hour')">
           {{ pmTime }}
         </button>
-        <span class="text-5xl font-semibold text-center align-middle">:</span>
+        <span class=" text-5xl font-semibold text-center align-middle text-neutral-100">:</span>
         <button @click="selecting = 'minute'" :class="activeTabClass('minute')">
           {{ paddedTime.minute }}
         </button>
-        <button @click="selecting = 'minute'" class="text-2xl font-semibold">
+        <button @click="selecting = 'minute'" class="text-2xl font-semibold text-neutral-100">
           {{ pm ? 'PM' : 'AM' }}
         </button>
       </div>
@@ -152,3 +182,44 @@ function activeTabClass(tab: 'hour' | 'minute') {
     </template>
   </UPopover>
 </template>
+
+
+<style>
+
+
+.text-5xl {
+  font-size: 3rem; /* 48px */
+  line-height: 1;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-2xl {
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
+}
+
+.bg-prim {
+  background-color: oklch(69.6% 0.17 162.48);
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-neutral-100 {
+  color: #f5f5f5;
+}
+
+.text-neutral-100 {
+  color: #f5f5f5;
+}
+
+.text-primary {
+  color: oklch(69.6% 0.17 162.48);
+}
+
+
+</style>
