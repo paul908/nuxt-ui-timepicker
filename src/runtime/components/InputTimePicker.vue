@@ -2,10 +2,13 @@
 import { ref, computed, watch, onMounted, toRefs, useAttrs } from 'vue'
 import ClockDial from "./ClockDial.vue";
 
+const time = defineModel<string>('time')
+const is24h = defineModel<boolean>('is24h')
+
 
 // const model = defineModel<string>('12:00')
-const stime = defineModel<string>('stime');
-const is24h = defineModel<boolean>('is24h')
+// const stime = defineModel<string>('stime');
+// const is24h = defineModel<boolean>('is24h')
 
 // const props = defineProps<{
 //   is24h: boolean
@@ -35,9 +38,10 @@ function formatTime(hour: number, minute: number): string {
 const selecting = ref<'hour' | 'minute'>('hour')
 const localHour = ref(0)
 const localMinute = ref(0)
-const format24h = ref(props.is24h ?? true)
+const format24h = ref(is24h.value ?? true)
 const pm = ref(false)
 pm.value = localHour.value >= 12
+
 
 var primaryColor = '';
 var secondaryColor = '';
@@ -51,6 +55,10 @@ onMounted(() => {
     neutralColor = root.getPropertyValue('--ui-color-neutral-200').trim();
     textColor = root.getPropertyValue('--ui-color-neutral-700').trim();
     console.log("primaryColor: ", primaryColor);
+})
+
+const safeIs24h = computed(() => {
+  return is24h.value ?? true
 })
 
 const pmLabel = computed(() => {
@@ -72,18 +80,18 @@ const pmTime = computed(() => {
   return x
 })
 
-watch(() => stime.value, () => {
-  debugLog('InputTimePicker watch(() => stime: ', stime.value);
-  const strValue: string = stime.value ?? '00:00';
+watch(() => time.value, () => {
+  debugLog('InputTimePicker watch(() => time: ', time.value);
+  const strValue: string = time.value ?? '00:00';
   const [hhStr, mmStr] = strValue.split(":");
   const hh = parseInt(hhStr, 10);
   const mm = parseInt(mmStr, 10);
   pm.value = hh >= 12;
 })
 
-watch(() => props.is24h, () => {
-  format24h.value = props.is24h;
-  debugLog('InputTimePicker.vue watch props.is24h format.value = props.is24h: ', format24h.value);
+watch(() => is24h.value, () => {
+  format24h.value = safeIs24h.value;
+  debugLog('InputTimePicker.vue watch is24h.value format.value = is24h.value: ', format24h.value);
 })
 
 watch(() => format24h.value, () => {
@@ -104,9 +112,9 @@ watch(() => pm.value, () => {
       localHour.value -= 12
     }
   }
-  stime.value = formatTime(localHour.value, localMinute.value);
+  time.value = formatTime(localHour.value, localMinute.value);
   debugLog("InputTimePicker.vue watch pm.value: ", pm.value, localHour.value, ':', localMinute.value,
-    ' - sTime.value: ', stime.value);
+    ' - time.value: ', time.value);
 })
 
 function onClockSelect(value: number) {
@@ -120,8 +128,8 @@ function onClockSelect(value: number) {
     localMinute.value = value
     selecting.value = 'hour'
   }
-  stime.value = formatTime(localHour.value, localMinute.value);
-  debugLog("onClockSelect: ", localHour.value, ':', localMinute.value, 'stime: ', stime.value);
+  time.value = formatTime(localHour.value, localMinute.value);
+  debugLog("onClockSelect: ", localHour.value, ':', localMinute.value, 'time: ', time.value);
 }
 
 function onUpdateAmPm(value: boolean) {
@@ -139,7 +147,7 @@ function activeTabClass(tab: 'hour' | 'minute') {
 <template>
   <div class="flex flex-row m-4">
     <UTooltip text="Click on icon for entering the time">
-      <UInput type="text" v-bind="attrs" v-model="stime" />
+      <UInput type="text" v-bind="attrs" v-model="time" />
     </UTooltip>
     <UPopover>
       <UButton icon="i-lucide-clock-3" size="md" color="primary" variant="solid"/>
