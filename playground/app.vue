@@ -1,8 +1,9 @@
 <template>
-  <div>
-    Nuxt module playground!
-  </div>
+  <UApp>
+    <NuxtPage/>
+  </UApp>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import {NuxtPage} from '#components'
 </script>

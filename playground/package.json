@@ -1,13 +1,28 @@
 {
+  "name": "nuxt-ui-timepicker-playground",
   "private": true,
-  "name": "my-module-playground",
   "type": "module",
   "scripts": {
-    "dev": "nuxi dev",
-    "build": "nuxi build",
-    "generate": "nuxi generate"
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "nuxt": "^3.16.2"
+    "@iconify-json/lucide": "^1.2.33",
+    "@iconify-json/simple-icons": "^1.2.29",
+    "@nuxt/ui": "^3.0.2",
+    "culori": "^4.0.1",
+    "nuxt": "^3.16.2",
+    "nuxt-ui-timepicker": "link:../"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.2.0",
+    "@types/culori": "^2.1.1",
+    "eslint": "^9.23.0",
+    "typescript": "^5.8.2"
   }
 }

@@ -8,10 +8,11 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:hourMinute', value: { hour: number; minute: number }): void
+  (e: 'update:hourMinute', value: { hour: number; minute: number }): void,
+  (e: 'update24h:format', value: boolean): void
 }>()
 
-const DEBUG = false;
+const DEBUG = true;
 
 function debugLog(...args: any) {
   if (DEBUG) console.log(...args);
@@ -23,33 +24,18 @@ const format24h = ref(props.is24h ?? true)
 const pm = ref(false)
 pm.value = localTime.value.hour >= 12
 
+var primaryColor = '';
+var secondaryColor = '';
+var neutralColor = '';
+var textColor = '';
+
 onMounted(() => {
   const root = getComputedStyle(document.documentElement);
-  var r = document.querySelector(':root');
-  const primaryColor = root.getPropertyValue('--ui-color-primary-500').trim();
-  const secondaryColor = root.getPropertyValue('--ui-color-secondary-500').trim();
-  const neutralColor = root.getPropertyValue('--ui-color-neutral-200').trim();
-  const textColor = root.getPropertyValue('--ui-color-neutral-700').trim();
+  primaryColor = root.getPropertyValue('--ui-color-primary-500').trim();
+  secondaryColor = root.getPropertyValue('--ui-color-secondary-500').trim();
+  neutralColor = root.getPropertyValue('--ui-color-neutral-200').trim();
+  textColor = root.getPropertyValue('--ui-color-neutral-700').trim();
   console.log("primaryColor: ", primaryColor);
-  // root.setProperty('--prim', primaryColor);
-
-  // Loop through and apply the background color
-  let elements = document.querySelectorAll('.bg-prim')
-
-  elements.forEach(el => {
-    if (el instanceof HTMLElement) {
-      el.style.backgroundColor = primaryColor
-    }
-
-  })
-  elements = document.querySelectorAll('.text-primary')
-
-  elements.forEach(el => {
-    if (el instanceof HTMLElement) {
-      el.style.color = primaryColor
-    }
-
-  })
 })
 
 const pmLabel = computed(() => {
@@ -72,21 +58,26 @@ const pmTime = computed(() => {
 })
 
 watch(() => props.hourMinute, () => {
+  debugLog('TimePicker.vue watch props.hourMinute: ', props.hourMinute);
   localTime.value = {...props.hourMinute}
+  pm.value = localTime.value.hour >= 12;
 })
 
 watch(() => props.is24h, () => {
   format24h.value = props.is24h
+  debugLog('TimePicker.vue watch props.is24h format.value = props.is24h: ', format24h.value);
 })
 
 watch(() => format24h.value, () => {
+  debugLog('TimePicker.vue watch format24h.value: ', format24h.value);
   if (!format24h.value) {
     pm.value = localTime.value.hour >= 12
   }
+  emit('update24h:format', format24h.value);
 })
 
 watch(() => pm.value, () => {
-  debugLog("TimePicket watch pm.value: ", pm.value, localTime.value.hour, ':', localTime.value.minute);
+  debugLog("TimePicker.vue watch pm.value: ", pm.value, localTime.value.hour, ':', localTime.value.minute);
   if (pm.value) {
     if (localTime.value.hour <= 12) {
       localTime.value.hour += 12
@@ -119,14 +110,15 @@ function onUpdateAmPm(value: boolean) {
 }
 
 function confirm() {
-  debugLog('update:hourMinute', {...localTime.value});
+  debugLog('TimePicker.vue emit update:hourMinute', {...localTime.value});
   emit('update:hourMinute', {...localTime.value})
+
 }
 
 function activeTabClass(tab: 'hour' | 'minute') {
   return tab === selecting.value
-    ? 'text-neutral-100 text-5xl bg-prim font-bold'
-    : 'text-neutral-100 text-5xl bg-prim '
+    ? 'text-neutral-100 text-5xl font-bold'
+    : 'text-neutral-100 text-5xl'
 }
 
 </script>
@@ -137,7 +129,8 @@ function activeTabClass(tab: 'hour' | 'minute') {
     <UButton icon="i-lucide-clock-3" size="md" color="primary" variant="solid"/>
     <template #content class="w-125 flex flex-col items-center justify-center">
       <!-- Time Display 24h -->
-      <div v-if="format24h" class="bg-prim flex flex-row items-center justify-center gap-4 bg-primary-500 text-neutral-100 p-2">
+      <div v-if="format24h" :style="{ backgroundColor: primaryColor }"
+           class="flex flex-row items-center justify-center gap-4 text-neutral-100 p-2">
         <button @click="selecting = 'hour'" :class="activeTabClass('hour')">
           {{ localTime.hour }}
         </button>
@@ -147,8 +140,8 @@ function activeTabClass(tab: 'hour' | 'minute') {
         </button>
       </div>
       <!-- Time Display AM/PM -->
-      <div v-if="!format24h"
-           class="bg-prim flex flex-row items-center justify-center align-center gap-4 text-neutral-100 p-2">
+      <div v-if="!format24h" :style="{ backgroundColor: primaryColor }"
+           class="flex flex-row items-center justify-center align-center gap-4 text-neutral-100 p-2">
         <button @click="selecting = 'hour'" :class="activeTabClass('hour')">
           {{ pmTime }}
         </button>
@@ -201,10 +194,6 @@ function activeTabClass(tab: 'hour' | 'minute') {
   line-height: 2rem; /* 32px */
 }
 
-.bg-prim {
-  background-color: oklch(69.6% 0.17 162.48);
-}
-
 .font-bold {
   font-weight: 700;
 }
@@ -220,6 +209,4 @@ function activeTabClass(tab: 'hour' | 'minute') {
 .text-primary {
   color: oklch(69.6% 0.17 162.48);
 }
-
-
 </style>

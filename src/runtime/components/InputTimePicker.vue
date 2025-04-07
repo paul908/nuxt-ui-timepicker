@@ -4,11 +4,17 @@ import ClockDial from "./ClockDial.vue";
 
 
 // const model = defineModel<string>('12:00')
-const stime = defineModel<string>();
+const stime = defineModel<string>('stime');
+const is24h = defineModel<boolean>('is24h')
 
-const props = defineProps<{
-  is24h: boolean
-}>()
+// const props = defineProps<{
+//   is24h: boolean
+// }>()
+
+// const emit = defineEmits<{
+//   (e: 'update24h:format', value: boolean): void
+// }>()
+
 
 // capture "extra" attributes like inputClass, variant, etc.
 const attrs = useAttrs()
@@ -22,6 +28,7 @@ function debugLog(...args: any) {
 function formatTime(hour: number, minute: number): string {
   const hh = hour.toString().padStart(2, '0');
   const mm = minute.toString().padStart(2, '0');
+  debugLog('formatTime: ', hh, ':', mm, `${hh}:${mm}`);
   return `${hh}:${mm}`;
 }
 
@@ -31,6 +38,20 @@ const localMinute = ref(0)
 const format24h = ref(props.is24h ?? true)
 const pm = ref(false)
 pm.value = localHour.value >= 12
+
+var primaryColor = '';
+var secondaryColor = '';
+var neutralColor = '';
+var textColor = '';
+
+onMounted(() => {
+    const root = getComputedStyle(document.documentElement);
+    primaryColor = root.getPropertyValue('--ui-color-primary-500').trim();
+    secondaryColor = root.getPropertyValue('--ui-color-secondary-500').trim();
+    neutralColor = root.getPropertyValue('--ui-color-neutral-200').trim();
+    textColor = root.getPropertyValue('--ui-color-neutral-700').trim();
+    console.log("primaryColor: ", primaryColor);
+})
 
 const pmLabel = computed(() => {
   return pm.value ? 'PM' : 'AM';
@@ -51,19 +72,29 @@ const pmTime = computed(() => {
   return x
 })
 
+watch(() => stime.value, () => {
+  debugLog('InputTimePicker watch(() => stime: ', stime.value);
+  const strValue: string = stime.value ?? '00:00';
+  const [hhStr, mmStr] = strValue.split(":");
+  const hh = parseInt(hhStr, 10);
+  const mm = parseInt(mmStr, 10);
+  pm.value = hh >= 12;
+})
 
 watch(() => props.is24h, () => {
-  format24h.value = props.is24h
+  format24h.value = props.is24h;
+  debugLog('InputTimePicker.vue watch props.is24h format.value = props.is24h: ', format24h.value);
 })
 
 watch(() => format24h.value, () => {
   if (!format24h.value) {
     pm.value = localHour.value >= 12
   }
+  // emit('update24h:format', format24h.value);
+  debugLog('InputTimePicker.vue watch format24h.value emit update24h:format', format24h.value);
 })
 
 watch(() => pm.value, () => {
-  debugLog("TimePicket watch pm.value: ", pm.value, localHour.value, ':', localMinute.value);
   if (pm.value) {
     if (localHour.value <= 12) {
       localHour.value += 12
@@ -74,6 +105,8 @@ watch(() => pm.value, () => {
     }
   }
   stime.value = formatTime(localHour.value, localMinute.value);
+  debugLog("InputTimePicker.vue watch pm.value: ", pm.value, localHour.value, ':', localMinute.value,
+    ' - sTime.value: ', stime.value);
 })
 
 function onClockSelect(value: number) {
@@ -97,7 +130,7 @@ function onUpdateAmPm(value: boolean) {
 
 function activeTabClass(tab: 'hour' | 'minute') {
   return tab === selecting.value
-      ? 'text-primary font-bold text-5xl'
+      ? 'text-neutral-100 font-bold text-5xl'
       : 'text-neutral-100 text-5xl'
 }
 
@@ -112,7 +145,8 @@ function activeTabClass(tab: 'hour' | 'minute') {
       <UButton icon="i-lucide-clock-3" size="md" color="primary" variant="solid"/>
       <template #content class="w-125 flex flex-col items-center justify-center">
         <!-- Time Display 24h -->
-        <div v-if="format24h" class="flex flex-row items-center justify-center gap-4 bg-primary-500 text-white p-2">
+        <div v-if="format24h"  :style="{ backgroundColor: primaryColor }"
+             class="flex flex-row items-center justify-center gap-4 text-neutral-100 p-2">
           <button @click="selecting = 'hour'" :class="activeTabClass('hour')">
             {{ localHour }}
           </button>
@@ -122,8 +156,8 @@ function activeTabClass(tab: 'hour' | 'minute') {
           </button>
         </div>
         <!-- Time Display AM/PM -->
-        <div v-if="!format24h"
-             class="flex flex-row items-center justify-center align-center gap-4 bg-primary-500 text-white p-2">
+        <div v-if="!format24h" :style="{ backgroundColor: primaryColor }"
+             class="flex flex-row items-center justify-center align-center gap-4 text-neutral-100 p-2">
           <button @click="selecting = 'hour'" :class="activeTabClass('hour')">
             {{ pmTime }}
           </button>
