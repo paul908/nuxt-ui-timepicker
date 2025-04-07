@@ -11,7 +11,6 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount, toRefs, useAttrs } from 'vue'
-
 import {formatHex} from 'culori';
 
 const props = defineProps<{
