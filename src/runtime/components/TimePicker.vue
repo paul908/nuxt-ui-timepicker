@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import {ref, computed, onMounted, watch} from 'vue'
 import ClockDial from "./ClockDial.vue";
 
 const DEBUG = true;
@@ -9,14 +9,14 @@ function debugLog(...args: any) {
 }
 
 // const time = defineModel<string>('time')
-const hourMinute = defineModel<{hour: number, minute: number}>('hourMinute')
+const hourMinute = defineModel<{ hour: number, minute: number }>('hourMinute')
 const is24h = defineModel<boolean>('is24h')
 
 const safeHourMinute = computed(() => {
-  debugLog('TimePicker.vue safeHourMinute: ', hourMinute.value ?? { hour: 0, minute: 0 });
   const h = hourMinute.value?.hour ?? 0
   const m = hourMinute.value?.minute ?? 0
-  return { hour: h, minute: m }
+  debugLog('TimePicker.vue safeHourMinute: ', hourMinute.value ?? {hour: 0, minute: 0});
+  return {hour: h, minute: m}
 })
 
 const safeHour = computed(() => {
@@ -59,12 +59,11 @@ const safeIs24h = computed(() => {
 // }>()
 
 
-
 const selecting = ref<'hour' | 'minute'>('hour')
 // const localTime = ref({...hourMinute.value})
 // const format24h = ref(is24h.value ?? true)
 const pm = ref(false)
-  pm.value = safeHourMinute.value.hour >= 12
+pm.value = safeHourMinute.value.hour >= 12
 
 var primaryColor = '';
 var secondaryColor = '';
@@ -87,6 +86,7 @@ onMounted(() => {
 // })
 
 const pmLabel = computed(() => {
+  debugLog('TimePicker.vue pmLabel: ', pm.value ? 'PM' : 'AM');
   return pm.value ? 'PM' : 'AM';
 })
 
@@ -138,23 +138,33 @@ watch(() => hourMinute.value?.minute, () => {
 //   emit('update24h:format', format24h.value);
 // })
 
-// watch(() => pm.value, () => {
-//   debugLog("TimePicker.vue watch pm.value: ", pm.value, localTime.value.hour, ':', localTime.value.minute);
-//   if (pm.value) {
-//     if (localTime.value.hour <= 12) {
-//       localTime.value.hour += 12
-//     }
-//   } else {
-//     if (localTime.value.hour >= 12) {
-//       localTime.value.hour -= 12
-//     }
-//   }
-//   confirm();
-// })
+watch(() => pm.value, () => {
+  debugLog("TimePicker.vue watch pm.value: ", pm.value, hourMinute.value?.hour, ':',
+    hourMinute.value?.minute);
+  if (hourMinute.value) {
+    const updated = {...hourMinute.value}
+    debugLog(' if (hourMinute.value) ...');
+    if (pm.value) {
+      debugLog('if pm.value ...');
+      if (hourMinute.value.hour <= 12) {
+        debugLog('if hourMinute.value.hour <= 12 ...');
+        updated.hour += 12
+      }
+    } else {
+      debugLog('else pm.value ...');
+      if (hourMinute.value.hour >= 12) {
+        debugLog('if hourMinute.value.hour >= 12 ...');
+        updated.hour -= 12
+      }
+    }
+    hourMinute.value = updated // 🛠️ Reassign to trigger reactivity
+  }
+  // confirm();
+})
 
 function onClockSelect(value: number) {
   if (hourMinute.value) {
-    const updated = { ...hourMinute.value }
+    const updated = {...hourMinute.value}
     debugLog('in if hourMinute.value: ', hourMinute.value);
     if (selecting.value === 'hour') {
       updated.hour = value
@@ -192,7 +202,7 @@ function activeTabClass(tab: 'hour' | 'minute') {
 </script>
 
 <template>
-<!--  <div class="bg-prim h-32 w-32">Hello</div>-->
+  <!--  <div class="bg-prim h-32 w-32">Hello</div>-->
   <UPopover>
     <UButton icon="i-lucide-clock-3" size="md" color="primary" variant="solid"/>
     <template #content class="w-125 flex flex-col items-center justify-center">
@@ -204,7 +214,7 @@ function activeTabClass(tab: 'hour' | 'minute') {
         </button>
         <span class="text-5xl font-semibold">:</span>
         <button @click="selecting = 'minute'" :class="activeTabClass('minute')">
-          {{ safeMinute }}
+          {{ paddedMinute }}
         </button>
       </div>
       <!-- Time Display AM/PM -->
@@ -215,7 +225,7 @@ function activeTabClass(tab: 'hour' | 'minute') {
         </button>
         <span class=" text-5xl font-semibold text-center align-middle text-neutral-100">:</span>
         <button @click="selecting = 'minute'" :class="activeTabClass('minute')">
-          {{ safeMinute }}
+          {{ paddedMinute }}
         </button>
         <button @click="selecting = 'minute'" class="text-2xl font-semibold text-neutral-100">
           {{ pm ? 'PM' : 'AM' }}
