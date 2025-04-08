@@ -1,6 +1,6 @@
 {
   "name": "nuxt-ui-timepicker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Nuxt UI-based time picker component module.",
   "repository": {
     "type": "git",

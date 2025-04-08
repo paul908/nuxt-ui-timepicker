@@ -1,14 +1,3 @@
-<template>
-  <div class="m-2">
-    <canvas
-        ref="canvasRef"
-        class="w-64 h-64 bg-neutral-200 dark:bg-neutral-800 rounded-full"
-        @click="onClick"
-        @mousemove="onMouseMove"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount, toRefs, useAttrs } from 'vue'
 import {formatHex} from 'culori';
@@ -519,3 +508,24 @@ function onTouchEnd(e: TouchEvent) {
   emitIndex();
 }
 </script>
+
+<template>
+  <div class="m-2">
+    <canvas
+      ref="canvasRef"
+      class="w256 h256 bg-neutral-200 dark:bg-neutral-800 rounded-full"
+      @click="onClick"
+      @mousemove="onMouseMove"
+    />
+  </div>
+</template>
+
+<style>
+.w256 {
+  width: 256px;
+}
+
+.h256 {
+  height: 256px;
+}
+</style>
