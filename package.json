@@ -15,7 +15,11 @@
   "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "screenshots",
+    "README.md",
+    "LICENSE.md"
   ],
   "scripts": {
     "prepack": "nuxt-module-build build",

@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ['@nuxt/ui', '@nuxt/eslint', '../src/module'],
+  modules: ['@nuxt/ui', '../src/module'],
   css: ['./assets/css/main.css'],
   devtools: { enabled: true },
   future: {
