@@ -2,7 +2,10 @@
   "name": "nuxt-ui-timepicker",
   "version": "1.0.0",
   "description": "A Nuxt UI-based time picker component module.",
-  "repository": "paulbq/nuxt-ui-timepicker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paul908/nuxt-ui-timepicker"
+  },
   "license": "MIT",
   "type": "module",
   "exports": {
