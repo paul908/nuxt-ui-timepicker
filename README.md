@@ -60,6 +60,10 @@ modules: [
 
 I did a remake a MIT licensed jquery plugin, it inspired me for the visuals but I made the controller from zero in a vue/nuxt/nuxt-ui style: [Clock Timepicker Plugin for jQuery](https://github.com/loebi-ch/jquery-clock-timepicker)
 
+## Demo
+
+[Demo on bqsystems.be](https://timepicker.bqsystems.be)
+
 ## License
 
 MIT licensed: [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
