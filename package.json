@@ -28,7 +28,8 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+    "postinstall": "pnpm add vue vue-router @tailwindcss/vite nuxt tailwindcss typescript @nuxt/kit @nuxt/ui culori @iconify-json/lucide @iconify-json/simple-icons"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.34",

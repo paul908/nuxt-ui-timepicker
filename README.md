@@ -14,17 +14,30 @@ This module consists of three nuxt-ui based components for getting a reusable Ti
 - Supports dark mode
 - MIT licensed
 
-## 📦 Installation
+## Installation
 
 ```bash
-npm install nuxt-ui-timepicker
+pnpm add @iconify-json/lucide @iconify-json/simple-icons @nuxt/kit culori @nuxt/ui nuxt-ui-timepicker tailwindcss @tailwindcss/vite
 ```
 
-## Playground
+pnpm add vue vue-router @tailwindcss/vite nuxt tailwindcss typescript @nuxt/kit @nuxt/ui culori @iconify-json/lucide @iconify-json/simple-icons
+
+pnpm add @tailwindcss/vite tailwindcss typescript @nuxt/kit @nuxt/ui culori @iconify-json/lucide @iconify-json/simple-icons ../nuxt-ui-timepicker/nuxt-ui-timepicker-1.0.0.tgz
+
+
+add to nuxt.config.ts:
+
+```ts
+modules: [
+  '@nuxt/ui',
+  'nuxt-ui-timepicker'
+]
+```
+
+## Playground - see github.com
 
 - Contains a simple app that shows the usage of the TimePickers.
 
 ## Inspired by a jquery plugin
 
 I did a remake of this MIT licensed jquery plugin, imitating the visuals but making the controller from zero: [Clock Timepicker Plugin for jQuery](https://github.com/loebi-ch/jquery-clock-timepicker)
-
