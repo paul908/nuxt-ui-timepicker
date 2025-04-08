@@ -48,7 +48,7 @@ const safeIs24h = computed(() => {
 })
 
 const ampmHour = computed(() => {
-  if (hourMinute.value){
+  if (hourMinute.value) {
     let x = hourMinute.value.hour;
     if (x > 12) {
       x -= 12;
@@ -56,12 +56,13 @@ const ampmHour = computed(() => {
       x = 12;
     }
     return x
-  }
-  else return 0;
+  } else return 0;
 })
 
+const open = ref(false)
 const selecting = ref<'hour' | 'minute'>('hour')
 const pm = ref(false)
+
 pm.value = safeHourMinute.value.hour >= 12
 
 var primaryColor = '';
@@ -127,6 +128,10 @@ watch(() => pm.value, () => {
   }
 })
 
+watch(open, (val) => {
+  selecting.value = 'hour'
+})
+
 function onClockSelect(value: number) {
   if (hourMinute.value) {
     const updated = {...hourMinute.value}
@@ -136,13 +141,31 @@ function onClockSelect(value: number) {
       if (pm.value && !is24h.value) {
         updated.hour += 12;
       }
-      selecting.value = 'minute'
+      // selecting.value = 'minute'
     } else {
       updated.minute = value
-      selecting.value = 'hour'
+      // selecting.value = 'hour'
     }
     hourMinute.value = updated // 🛠️ Reassign to trigger reactivity
     debugLog("TimePicker onClockSelect: ", hourMinute.value, 'selecting: ', selecting.value);
+  }
+}
+
+function switchMode() {
+  debugLog('TimePicker.vue switchMode: ', selecting.value);
+  if (selecting.value === 'hour') {
+    selecting.value = 'minute'
+  } else {
+    selecting.value = 'hour'
+  }
+}
+
+function switchToMinutes() {
+  debugLog('TimePicker.vue switchMode: ', selecting.value);
+  if (selecting.value === 'hour') {
+    selecting.value = 'minute'
+  } else {
+    open.value = false
   }
 }
 
@@ -167,7 +190,7 @@ function activeTabClass(tab: 'hour' | 'minute') {
 
 <template>
   <!--  <div class="bg-prim h-32 w-32">Hello</div>-->
-  <UPopover>
+  <UPopover v-model:open="open">
     <UButton icon="i-lucide-clock-3" size="md" color="primary" variant="solid"/>
     <template #content class="w-125 flex flex-col items-center justify-center">
       <!-- Time Display 24h -->
@@ -203,17 +226,23 @@ function activeTabClass(tab: 'hour' | 'minute') {
         <UCheckbox v-if="!is24h" class="w-10" v-model="pm" :label="pmLabel"/>
         <div v-else class="w-10"></div>
       </div>
-
-      <!-- Clock Dial -->
-      <ClockDial
-        :mode="selecting"
-        :hour="safeHour"
-        :minute="safeMinute"
-        :is24h="safeIs24h"
-        :pm="pm"
-        @update="onClockSelect"
-        @updatePm="onUpdateAmPm"
-      />
+      <div class="w256 h256">
+        <!-- Clock Dial -->
+        <ClockDial
+          :mode="selecting"
+          :hour="safeHour"
+          :minute="safeMinute"
+          :is24h="safeIs24h"
+          :pm="pm"
+          @update="onClockSelect"
+          @updatePm="onUpdateAmPm"
+          @switch="switchToMinutes"
+        />
+      </div>
+      <div class="flex flex-row gap-2 items-center justify-center p-2">
+        <UButton v-if="selecting === 'hour'" class="w-full justify-center" color="primary" @click="switchMode">Switch to minutes</UButton>
+        <UButton v-if="selecting === 'minute'" class="w-full justify-center" color="primary" @click="switchMode">Switch to hours</UButton>
+      </div>
     </template>
   </UPopover>
 </template>
@@ -248,4 +277,13 @@ function activeTabClass(tab: 'hour' | 'minute') {
 .text-primary {
   color: oklch(69.6% 0.17 162.48);
 }
+
+.w256 {
+  width: 256px;
+}
+
+.h256 {
+  height: 256px;
+}
+
 </style>
