@@ -8,7 +8,7 @@ const is24h = defineModel<boolean>('is24h')
 // capture "extra" attributes like inputClass, variant, etc.
 const attrs = useAttrs()
 
-const DEBUG = true;
+const DEBUG = false;
 
 function debugLog(...args: any) {
   if (DEBUG) console.log(...args);
@@ -53,7 +53,7 @@ onMounted(() => {
   secondaryColor = root.getPropertyValue('--ui-color-secondary-500').trim();
   neutralColor = root.getPropertyValue('--ui-color-neutral-200').trim();
   textColor = root.getPropertyValue('--ui-color-neutral-700').trim();
-  console.log("primaryColor: ", primaryColor);
+  debugLog("primaryColor: ", primaryColor);
 })
 
 const safeIs24h = computed(() => {

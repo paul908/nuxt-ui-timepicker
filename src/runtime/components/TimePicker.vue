@@ -2,7 +2,7 @@
 import {ref, computed, onMounted, watch} from 'vue'
 import ClockDial from "./ClockDial.vue";
 
-const DEBUG = true;
+const DEBUG = false;
 
 function debugLog(...args: any) {
   if (DEBUG) console.log(...args);
@@ -75,7 +75,7 @@ onMounted(() => {
   secondaryColor = root.getPropertyValue('--ui-color-secondary-500').trim();
   neutralColor = root.getPropertyValue('--ui-color-neutral-200').trim();
   textColor = root.getPropertyValue('--ui-color-neutral-700').trim();
-  console.log("primaryColor: ", primaryColor);
+  debugLog("primaryColor: ", primaryColor);
 })
 
 const pmLabel = computed(() => {
