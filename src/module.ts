@@ -1,7 +1,4 @@
-// import { defu } from 'defu'
 import { createResolver, defineNuxtModule, addComponentsDir, addVitePlugin, addPlugin, installModule, hasNuxtModule } from '@nuxt/kit'
-// import { defaultOptions, getDefaultUiConfig, resolveColors } from './defaults'
-
 
 // Module options TypeScript interface definition
 export interface ModuleOptions {
@@ -59,40 +56,11 @@ export default defineNuxtModule<ModuleOptions>({
   async setup(options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
 
-    // options.theme = options.theme || {}
-    // options.theme.colors = resolveColors(options.theme.colors)
-    //
-    // nuxt.options.ui = options
-    //
-    // nuxt.options.alias['#ui'] = resolve('./runtime')
-    //
-    // nuxt.options.appConfig.ui = defu(nuxt.options.appConfig.ui || {}, getDefaultUiConfig(options.theme.colors))
-    //
-    //
-    // async function registerModule(name: string, key: string, options: Record<string, any>) {
-    //   if (!hasNuxtModule(name)) {
-    //     await installModule(name, options)
-    //   } else {
-    //     (nuxt.options as any)[key] = defu((nuxt.options as any)[key], options)
-    //   }
-    // }
-
-    // await registerModule('nuxt', 'nuxt', {  })
-    // await registerModule('culori', 'culori', {  })
-    // await registerModule('tailwindcss', 'tailwindcss', {  })
-    // await registerModule('@nuxt/ui', 'ui', { cssLayer: 'components' })
-    // await registerModule('@nuxt/icon', 'icon', { cssLayer: 'components' })
-    // await registerModule('@nuxt/fonts', 'fonts', { experimental: { processCSSVariables: true } })
-    // await registerModule('@nuxtjs/color-mode', 'colorMode', { classSuffix: '', disableTransition: true })
-    // await registerModule('@nuxtjs/tailwindcss', 'nuxtjs-tailwindcss', { classSuffix: '', disableTransition: true })
-
-
     // Do not add the extension since the `.ts` will be transpiled to `.mjs` after `npm run prepack`
     addComponentsDir({
       path: resolve(__dirname, './runtime/components')
     })
 
     nuxt.options.css.push(resolve('./runtime/assets/css/main.css'))
-    // nuxt.options.build.transpile.push(resolve('runtime'))
   },
 })

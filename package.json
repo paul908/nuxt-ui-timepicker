@@ -35,7 +35,7 @@
     "@iconify-json/simple-icons": "^1.2.30",
     "@nuxt/kit": "^3.16.2",
     "culori": "^4.0.1",
-    "defu": "^6.1.4"
+    "@nuxt/ui": "3.0.2"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.3.2",
@@ -53,13 +53,5 @@
     "typescript": "~5.8.2",
     "vitest": "^3.1.1",
     "vue-tsc": "^2.2.8"
-  },
-  "peerDependencies": {
-    "@iconify-json/lucide": "^1.2.34",
-    "@iconify-json/simple-icons": "^1.2.30",
-    "@nuxt/kit": "^3.16.2",
-    "@nuxt/ui": "3.0.2",
-    "culori": "^4.0.1",
-    "nuxt": "^3.16.2"
   }
 }
