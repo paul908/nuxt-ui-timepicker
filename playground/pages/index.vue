@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const DEBUG = true;
+const DEBUG = false;
 
 function debugLog(...args: any) {
   if (DEBUG) console.log(...args);

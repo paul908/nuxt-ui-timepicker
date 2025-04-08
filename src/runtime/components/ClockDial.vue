@@ -29,6 +29,7 @@ function debugLog(...args: any) {
 const emit = defineEmits<{
   (e: 'update', value: number): void
   (e: 'updatePm', value: boolean): void
+  (e: 'switch'): void
 }>()
 
 const canvasRef = ref<HTMLCanvasElement>()
@@ -49,6 +50,7 @@ onMounted(() => {
   // Consider marking event handler as 'passive' to make the page more responsive.
   // See https://www.chromestatus.com/feature/5745543795965952
   const canvas = canvasRef.value
+
   if (canvas) {
 
     draw();
@@ -458,7 +460,7 @@ function move(clientX: number, clientY: number) {
       if (index.value < 0) index.value += steps
     }
   }
-
+  emitIndex();
 }
 
 function onMouseMove(e: MouseEvent) {
@@ -496,16 +498,24 @@ function emitIndex() {
   emit('update', index.value)
 }
 
+function emitSwitch() {
+  {
+    emit('switch');
+  }
+}
+
 function onClick(e: MouseEvent) {
   e.preventDefault();
   debugLog('click');
   emitIndex();
+  emitSwitch();
 }
 
 function onTouchEnd(e: TouchEvent) {
   e.preventDefault();
   debugLog('click');
   emitIndex();
+  emitSwitch();
 }
 </script>
 

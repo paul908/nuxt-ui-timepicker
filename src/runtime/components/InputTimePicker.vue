@@ -36,6 +36,7 @@ const setLocalTime = (time: string | undefined) => {
   localMinute.value = mm;
 }
 
+const open = ref(false)
 const selecting = ref<'hour' | 'minute'>('hour')
 const localHour = ref(0)
 const localMinute = ref(0)
@@ -103,19 +104,41 @@ watch(() => pm.value, () => {
     ' - time.value: ', time.value);
 })
 
+watch(open, (val) => {
+  selecting.value = 'hour'
+})
+
 function onClockSelect(value: number) {
   if (selecting.value === 'hour') {
     localHour.value = value
     if (pm.value && !is24h.value) {
       localHour.value += 12;
     }
-    selecting.value = 'minute'
+    // selecting.value = 'minute'
   } else {
     localMinute.value = value
-    selecting.value = 'hour'
+    // selecting.value = 'hour'
   }
   time.value = formatTime(localHour.value, localMinute.value);
   debugLog("InputTimePicker onClockSelect: ", localHour.value, ':', localMinute.value, 'time: ', time.value);
+}
+
+function switchMode() {
+  debugLog('TimePicker.vue switchMode: ', selecting.value);
+  if (selecting.value === 'hour') {
+    selecting.value = 'minute'
+  } else {
+    selecting.value = 'hour'
+  }
+}
+
+function switchToMinutes() {
+  debugLog('TimePicker.vue switchMode: ', selecting.value);
+  if (selecting.value === 'hour') {
+    selecting.value = 'minute'
+  } else {
+    open.value = false;
+  }
 }
 
 function onUpdateAmPm(value: boolean) {
@@ -136,7 +159,7 @@ function activeTabClass(tab: 'hour' | 'minute') {
     <UTooltip text="Click on icon for entering the time">
       <UInput type="text" v-bind="attrs" v-model="time"/>
     </UTooltip>
-    <UPopover>
+    <UPopover v-model:open="open">
       <UButton icon="i-lucide-clock-3" size="md" color="primary" variant="solid"/>
       <template #content class="w-125 flex flex-col items-center justify-center">
         <!-- Time Display 24h -->
@@ -172,7 +195,7 @@ function activeTabClass(tab: 'hour' | 'minute') {
           <UCheckbox v-if="!is24h" class="w-10" v-model="pm" :label="pmLabel"/>
           <div v-else class="w-10"></div>
         </div>
-
+        <div class="w256 h256">
         <!-- Clock Dial -->
         <ClockDial
           :mode="selecting"
@@ -182,8 +205,24 @@ function activeTabClass(tab: 'hour' | 'minute') {
           :pm="pm"
           @update="onClockSelect"
           @updatePm="onUpdateAmPm"
+          @switch="switchToMinutes"
         />
+        </div>
+        <div class="flex flex-row gap-2 items-center justify-center p-2">
+          <UButton v-if="selecting === 'hour'" class="w-full justify-center" color="primary" @click="switchMode">Switch to minutes</UButton>
+          <UButton v-if="selecting === 'minute'" class="w-full justify-center" color="primary" @click="switchMode">Switch to hours</UButton>
+        </div>
       </template>
     </UPopover>
   </div>
 </template>
+
+<style>
+.w256 {
+  width: 256px;
+}
+
+.h256 {
+  height: 256px;
+}
+</style>
