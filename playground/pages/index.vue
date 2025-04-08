@@ -55,7 +55,6 @@ watch(() => is24h.value, () => {
           <div class="text-lg text-center w-15">{{ is24h ? '24h' : 'AM/PM' }}</div>
         </div>
         <p class="h-16 text-6xl text-center my-auto">{{ hourMinute.hour }}:{{ hourMinute.minute.toString().padStart(2, '0') }}</p>
-        <p class="h-16 text-6xl text-center my-auto">hello</p>
       </div>
       <template #footer>
         <div class="flex items-center justify-center">
