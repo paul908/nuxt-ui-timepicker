@@ -88,7 +88,7 @@ watch(() => time.value, () => {
 
 watch(() => pm.value, () => {
   if (pm.value) {
-    if (localHour.value <= 12) {
+    if (localHour.value < 12) {
       localHour.value += 12
     }
   } else {

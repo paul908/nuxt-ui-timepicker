@@ -113,7 +113,7 @@ watch(() => pm.value, () => {
     debugLog(' if (hourMinute.value) ...');
     if (pm.value) {
       debugLog('if pm.value ...');
-      if (hourMinute.value.hour <= 12) {
+      if (hourMinute.value.hour < 12) {
         debugLog('if hourMinute.value.hour <= 12 ...');
         updated.hour += 12
       }
@@ -123,6 +123,10 @@ watch(() => pm.value, () => {
         debugLog('if hourMinute.value.hour >= 12 ...');
         updated.hour -= 12
       }
+    }
+    if (hourMinute.value.hour === 24) {
+      debugLog('if hourMinute.value.hour == 24 ...');
+      updated.hour = 24;
     }
     hourMinute.value = updated // 🛠️ Reassign to trigger reactivity
   }
